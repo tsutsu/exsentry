@@ -12,9 +12,9 @@ defmodule ExSentry.SenderTest do
 
   @response_1xx %{status_code: 100, headers: %{}}
   @response_2xx %{status_code: 200, headers: %{}}
-  @response_3xx %{status_code: 301, headers: %{"Location": "https://example.com"}}
-  @response_4xx %{status_code: 400, headers: %{"X-Sentry-Error": "omg"}}
-  @response_5xx %{status_code: 503, headers: %{"X-Sentry-Error": "lol"}}
+  @response_3xx %{status_code: 301, headers: %{hdrs: [location: "https://example.com"]}}
+  @response_4xx %{status_code: 400, headers: %{hdrs: [{:"x-sentry-error", "omg"}]}}
+  @response_5xx %{status_code: 503, headers: %{hdrs: [{:"x-sentry-error", "lol"}]}}
 
   describe "send_request/3" do
     it "launches and stops server automatically" do
