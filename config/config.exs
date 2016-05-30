@@ -33,3 +33,7 @@ if Mix.env == :test do
   config :exsentry, dsn: ""
 end
 
+config :exsentry,
+  copy_request_body: true,
+  copy_request_body_bytes: 10000
+

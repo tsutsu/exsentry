@@ -2,9 +2,9 @@ ExUnit.start()
 
 defmodule FakeConn do
   defmodule Adapter do
-    def read_req_body(conn, _opts) do
-      {:ok, "body", conn}
-    end
+    #def read_req_body(conn, _opts) do
+      #{:ok, "body", conn}
+    #end
   end
 
   def req_headers do
@@ -24,8 +24,10 @@ defmodule FakeConn do
       req_headers: req_headers,
       remote_ip: {127,0,0,1},
       req_cookies: %{"mm" => "food"},
+      private: [
+        exsentry_request_body: "body",
+      ]
     }
   end
 end
-
 
