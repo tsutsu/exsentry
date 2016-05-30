@@ -23,19 +23,64 @@ defmodule ExSentry do
             [applications: [:exsentry]]
           end
 
-  3. Optional: To configure the default ExSentry client, specify your
-     Sentry DSN in `config.exs`:
+  3. To configure the default ExSentry client, specify your Sentry DSN
+     in `config.exs`:
 
           config :exsentry, dsn: "your-dsn-here"
 
+     To turn ExSentry off for a particular `MIX_ENV`, set the Sentry
+     DSN to the empty string `""` in the appropriate config file.
 
-  ## Usage
 
-  ExSentry can be used as a manually-configured standalone client,
-  as a `config.exs`-configured OTP application,
-  or as a Plug in your webapp's plug stack (e.g., Phoenix router).
+  ## Getting Started
 
-  ### Standalone
+  Use `ExSentry.LoggerBackend` to send all `:error`-level log messages
+  to Sentry:
+
+      defmodule Myapp do
+        use Application
+
+        def start(_type, _args) do
+          Logger.add_backend(ExSentry.LoggerBackend)
+          # ...
+        end
+
+        # ...
+      end
+
+  Use `ExSentry.Plug` to capture all exceptions in a Plug pipeline:
+
+      # Phoenix example
+      defmodule Myapp.Router do
+        use Myapp.Web, :router
+        use ExSentry.Plug
+
+        pipeline :browser do
+          # ...
+
+
+      # pure Plug example
+      defmodule Myapp.Router do
+        use Plug.Router
+        use ExSentry.Plug
+
+        get "/" do
+          # ...
+
+  Use `ExSentry` by itself to send exception or message data to Sentry:
+
+      ExSentry.capture_message("Hello world!")
+
+      ExSentry.capture_exception(an_exception)
+
+      ExSentry.capture_exceptions fn ->
+        something_that_might_raise()
+      end
+
+
+  ## Standalone usage
+
+  ExSentry can be used as a manually-configured standalone client.
 
   Create a client process like this:
 
@@ -50,40 +95,6 @@ defmodule ExSentry do
       client |> ExSentry.capture_exceptions fn ->
         something_that_might_raise()
       end
-
-
-  ### OTP Application
-
-  If you've configured `config.exs` as described in the README:
-
-      config :exsentry, dsn: "your-dsn-here"
-
-  You can invoke ExSentry without explicitly creating a client:
-
-      ExSentry.capture_message("Hello world!")
-
-      ExSentry.capture_exception(an_exception)
-
-      ExSentry.capture_exceptions fn ->
-        something_that_might_raise()
-      end
-
-
-  ### Plug
-
-  ExSentry can be used as a Plug error handler, to automatically inform
-  Sentry of any exceptions encountered within your web application.
-
-  To use ExSentry as a Plug error handler, follow all configuration
-  instructions, then put `use ExSentry.Plug` wherever your Plug stack is
-  defined, for instance in `web/router.ex` in a Phoenix application:
-
-      defmodule MyApp.Router do
-        use MyApp.Web, :router
-        use ExSentry.Plug
-
-        pipeline :browser do
-        ...
 
 
   ## Authorship and License
