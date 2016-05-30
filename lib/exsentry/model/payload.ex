@@ -44,7 +44,7 @@ defmodule ExSentry.Model.Payload do
     ## attributes
     event_id = opts[:event_id] || UUID.uuid4() |> String.replace("-", "")
     timestamp = opts[:timestamp] || now
-    message = opts[:message] && String.slice(opts[:message], 0..999)
+    message = opts[:message] && String.slice(to_string(opts[:message]), 0..999)
     level = opts[:level] || :error
     logger = opts[:logger] || "ExSentry #{versions[:exsentry]}"
     server_name = opts[:server_name] || :inet.gethostname |> elem(1) |> to_string
