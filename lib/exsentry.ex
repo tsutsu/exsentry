@@ -2,12 +2,6 @@ defmodule ExSentry do
   @moduledoc ~s"""
   ExSentry is an Elixir interface to the Sentry error reporting platform.
 
-  ExSentry may be used as an OTP application with a client configured by
-  `config.exs`, or as a standalone client configured manually.
-  ExSentry.Plug can be used to intercept and report exceptions encountered
-  by a Plug-based web application.
-
-
   ## Installation
 
   1. Add ExSentry to your list of dependencies in `mix.exs`:
@@ -23,7 +17,7 @@ defmodule ExSentry do
             [applications: [:exsentry]]
           end
 
-  3. To configure the default ExSentry client, specify your Sentry DSN
+  3. Configure the default ExSentry client by specifying your Sentry DSN
      in `config.exs`:
 
           config :exsentry, dsn: "your-dsn-here"
@@ -32,7 +26,7 @@ defmodule ExSentry do
      DSN to the empty string `""` in the appropriate config file.
 
 
-  ## Getting Started
+  ## Typical usage
 
   Use `ExSentry.LoggerBackend` to send all `:error`-level log messages
   to Sentry:
