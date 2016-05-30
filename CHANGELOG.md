@@ -1,3 +1,10 @@
+0.4.0
+
+* Fixed error around `String.Graphemes.next_grapheme_size`.
+
+* Added `ExSentry.LoggerBackend`, for sending log messages to Sentry.
+
+
 0.3.0
 
 Prevent ExSentry itself from ever raising an exception due to user
@@ -19,3 +26,4 @@ input.
 0.2.1
 
 Last release as a single-programmer project.
+
