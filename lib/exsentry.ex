@@ -145,10 +145,13 @@ defmodule ExSentry do
 
   @doc ~S"""
   Sends an exception to Sentry, using the given client and options.
+
+  Pass an Erlang stacktrace as `opts[:stacktrace]` to override
+  the default `System.stacktrace` behavior.
   """
   @spec capture_exception(GenServer.server, Exception.t, [atom: any]) :: :ok
   def capture_exception(client, exception, opts) do
-    trace = System.stacktrace |> Enum.drop(1)
+    trace = opts[:stacktrace] || (System.stacktrace |> Enum.drop(1))
     GenServer.cast(client, {:capture_exception, exception, trace, opts})
   end
 
