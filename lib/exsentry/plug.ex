@@ -14,9 +14,22 @@ defmodule ExSentry.Plug do
 
         pipeline :browser do
         ...
+
+  Available options:
+
+  * `exception_whitelist` (list of modules) skips reporting on the given
+    exception types
+
+         use ExSentry.Plug, exception_whitelist: [ArgumentError]
+
+  * `plug_status_whitelist` (list of integers) skips reporting on exception
+    types with the given Plug status
+
+         use ExSentry.Plug, plug_status_whitelist: [401, 403, 404]
   """
 
-  defmacro __using__(_env) do
+  @doc false
+  defmacro __using__(opts) do
     quote do
       use Plug.ErrorHandler
 
@@ -31,16 +44,33 @@ defmodule ExSentry.Plug do
       end
 
       defp handle_errors(conn, %{reason: exception, stack: stack}=args) do
-        ExSentry.Plug.handle_errors(conn, args)
+        ExSentry.Plug.handle_errors(conn, args, unquote(opts))
       end
     end
   end
 
-  @spec handle_errors(%Plug.Conn{}, map) :: :ok
-  def handle_errors(conn, %{reason: exception, stack: stack}) do
-    req = ExSentry.Model.Request.from_conn(conn)
-    st = ExSentry.Model.Stacktrace.from_stacktrace(stack)
-    ExSentry.capture_exception(exception, request: req, stacktrace: st)
+  @doc false
+  @spec handle_errors(%Plug.Conn{}, map, [{atom, any}]) :: :ok
+  def handle_errors(conn, %{reason: exception, stack: stack}, opts \\ []) do
+    with_whitelists opts, exception, fn ->
+      req = ExSentry.Model.Request.from_conn(conn)
+      st = ExSentry.Model.Stacktrace.from_stacktrace(stack)
+      ExSentry.capture_exception(exception, request: req, stacktrace: st)
+    end
+    :ok
+  end
+
+  @doc false
+  @spec with_whitelists([{atom, any}], %{}, function) :: any
+  def with_whitelists(opts, exception, func) do
+    ew = opts[:exception_whitelist] || []
+    psw = opts[:plug_status_whitelist] || []
+    status = Plug.Exception.status(exception)
+    if !(status in psw) && !(exception.__struct__ in ew) do
+      func.()
+    else
+      :whitelisted
+    end
   end
 end
 
