@@ -1,3 +1,11 @@
+0.5.0
+
+* Added `:stacktrace` option to `ExSentry.capture_exception`.
+
+* Added `:exception_whitelist` and `:plug_status_whitelist` options
+  to `ExSentry.Plug`.
+
+
 0.4.0
 
 * Fixed error around `String.Graphemes.next_grapheme_size`.
