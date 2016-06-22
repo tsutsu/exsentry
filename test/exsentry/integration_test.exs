@@ -2,7 +2,7 @@ defmodule ExSentry.IntegrationTest do
   use ExSpec, async: false
   import Mock
 
-  describe "integration" do
+  ExSpec.describe "integration" do
     it "ExSentry.new to HTTPotion.post, via capture_message" do
       with_mock HTTPotion, [
         post: fn (url, _opts) ->

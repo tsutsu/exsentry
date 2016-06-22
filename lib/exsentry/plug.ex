@@ -4,7 +4,7 @@ defmodule ExSentry.Plug do
   intercept and report to Sentry any exceptions encountered by a Plug-based
   web application.
 
-  To use, configure `mix.exs` and `config.exs` as described in README.md,
+  To use, configure `mix.exs` and `config.exs` as ExSpec.described in README.md,
   then add `use ExSentry.Plug` near the top of your webapp's plug stack,
   for example:
 
