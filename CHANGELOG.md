@@ -1,3 +1,9 @@
+0.5.1
+
+* Added Elixir 1.3 compatibility.
+  Thanks [@cschiewek](https://github.com/cschiewek)!
+
+
 0.5.0
 
 * Added `:stacktrace` option to `ExSentry.capture_exception`.
