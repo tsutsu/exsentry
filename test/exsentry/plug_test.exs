@@ -2,7 +2,7 @@ defmodule ExSentry.PlugTest do
   use ExSpec, async: true
   doctest ExSentry.Plug
 
-  describe "handle_errors" do
+  ExSpec.describe "handle_errors" do
     it "returns :ok just like capture_exception" do
       try do
         raise "omglol"
@@ -18,7 +18,7 @@ defmodule ExSentry.PlugTest do
     defexception plug_status: 404, message: "not found"
   end
 
-  describe "with_whitelists" do
+  ExSpec.describe "with_whitelists" do
     it "respects :exception_whitelist" do
       e = %NotFoundError{}
       opts = [exception_whitelist: [NotFoundError]]

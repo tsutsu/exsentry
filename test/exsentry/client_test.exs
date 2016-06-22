@@ -5,7 +5,7 @@ defmodule ExSentry.ClientTest do
   alias ExSentry.Client.State
   doctest ExSentry.Client
 
-  describe "capture_exception" do
+  ExSpec.describe "capture_exception" do
     it "dispatches a well-formed request" do
       with_mock ExSentry.Sender, [
         init: fn (_) -> {:ok, :whatever} end,
@@ -27,7 +27,7 @@ defmodule ExSentry.ClientTest do
     end
   end
 
-  describe "capture_message" do
+  ExSpec.describe "capture_message" do
     it "dispatches a well-formed request" do
       with_mock ExSentry.Sender, [
         init: fn (_) -> {:ok, :whatever} end,
@@ -44,4 +44,3 @@ defmodule ExSentry.ClientTest do
   end
 
 end
-

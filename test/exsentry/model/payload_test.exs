@@ -2,7 +2,7 @@ defmodule ExSentry.Model.PayloadTest do
   use ExSpec, async: true
   doctest ExSentry.Model.Payload
 
-  describe "get_auth_header_value" do
+  ExSpec.describe "get_auth_header_value" do
     it "returns a well-formatted string header" do
       args = %{
         version: "1.2.3",
@@ -27,7 +27,7 @@ defmodule ExSentry.Model.PayloadTest do
     end
   end
 
-  describe "serialization" do
+  ExSpec.describe "serialization" do
     it "serializes to JSON" do
       opts = [message: "hi mom"]
       assert({:ok, _} = opts |> ExSentry.Model.Payload.from_opts |> Poison.encode)

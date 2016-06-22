@@ -44,7 +44,7 @@ defmodule ExSentry.Mixfile do
       {:uuid, "~> 1.1"},
       {:timex, "~> 2.1"},
       {:ibrowse, "~> 4.2.2", [hex: :ibrowse]},
-      {:httpotion, "~> 2.1"},
+      {:httpotion, "~> 3.0"},
       {:poison, "~> 1.5 or ~> 2.0"},
       {:plug, "~> 1.0"},
       {:ex_spec, "~> 1.0.0", only: :test},

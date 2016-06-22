@@ -2,39 +2,39 @@ defmodule ExSentryTest do
   use ExSpec, async: false
   doctest ExSentry
 
-  describe "new" do
+  ExSpec.describe "new" do
     it "returns pid" do
       assert(is_pid(ExSentry.new("")))
     end
   end
 
 
-  describe "capture_message(client, message, opts)" do
+  ExSpec.describe "capture_message(client, message, opts)" do
     it "returns :ok" do
       assert(:ok == ExSentry.capture_message(:exsentry_default_client, "hi", []))
     end
   end
 
-  describe "capture_message(message, opts)" do
+  ExSpec.describe "capture_message(message, opts)" do
     it "returns :ok" do
       assert(:ok == ExSentry.capture_message("hi", []))
     end
   end
 
-  describe "capture_message(client, message)" do
+  ExSpec.describe "capture_message(client, message)" do
     it "returns :ok" do
       assert(:ok == ExSentry.capture_message(:exsentry_default_client, "hi"))
     end
   end
 
-  describe "capture_message(message)" do
+  ExSpec.describe "capture_message(message)" do
     it "returns :ok" do
       assert(:ok == ExSentry.capture_message("hi"))
     end
   end
 
 
-  describe "capture_exception(client, exception, opts)" do
+  ExSpec.describe "capture_exception(client, exception, opts)" do
     it "returns :ok" do
       try do
         raise "omg"
@@ -45,7 +45,7 @@ defmodule ExSentryTest do
     end
   end
 
-  describe "capture_exception(exception, opts)" do
+  ExSpec.describe "capture_exception(exception, opts)" do
     it "returns :ok" do
       try do
         raise "omg"
@@ -56,7 +56,7 @@ defmodule ExSentryTest do
     end
   end
 
-  describe "capture_exception(client, exception)" do
+  ExSpec.describe "capture_exception(client, exception)" do
     it "returns :ok" do
       try do
         raise "omg"
@@ -67,7 +67,7 @@ defmodule ExSentryTest do
     end
   end
 
-  describe "capture_exception(exception)" do
+  ExSpec.describe "capture_exception(exception)" do
     it "returns :ok" do
       try do
         raise "omg"
@@ -79,7 +79,7 @@ defmodule ExSentryTest do
   end
 
 
-  describe "capture_exceptions(client, opts, fun)" do
+  ExSpec.describe "capture_exceptions(client, opts, fun)" do
     it "invokes fun.()" do
       try do
         ExSentry.capture_exceptions(:exsentry_default_client, [], fn -> raise "omg" end)
@@ -89,7 +89,7 @@ defmodule ExSentryTest do
     end
   end
 
-  describe "capture_exceptions(opts, fun)" do
+  ExSpec.describe "capture_exceptions(opts, fun)" do
     it "invokes fun.()" do
       try do
         ExSentry.capture_exceptions([], fn -> raise "omg" end)
@@ -99,7 +99,7 @@ defmodule ExSentryTest do
     end
   end
 
-  describe "capture_exceptions(client, fun)" do
+  ExSpec.describe "capture_exceptions(client, fun)" do
     it "invokes fun.()" do
       try do
         ExSentry.capture_exceptions(:exsentry_default_client, fn -> raise "omg" end)
@@ -109,7 +109,7 @@ defmodule ExSentryTest do
     end
   end
 
-  describe "capture_exceptions(fun)" do
+  ExSpec.describe "capture_exceptions(fun)" do
     it "invokes fun.()" do
       try do
         ExSentry.capture_exceptions(fn -> raise "omg" end)

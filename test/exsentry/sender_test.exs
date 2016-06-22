@@ -16,7 +16,7 @@ defmodule ExSentry.SenderTest do
   @response_4xx %{status_code: 400, headers: %{hdrs: [{:"x-sentry-error", "omg"}]}}
   @response_5xx %{status_code: 503, headers: %{hdrs: [{:"x-sentry-error", "lol"}]}}
 
-  describe "send_request/3" do
+  ExSpec.describe "send_request/3" do
     it "launches and stops server automatically" do
       with_mock HTTPotion, [
         post: fn (_url, _opts) -> @response_2xx end
@@ -28,7 +28,7 @@ defmodule ExSentry.SenderTest do
     end
   end
 
-  describe "send_request/4" do
+  ExSpec.describe "send_request/4" do
     it "handles 2xx", %{sender: sender} do
       with_mock HTTPotion, [
         post: fn (_url, _opts) -> @response_2xx end
