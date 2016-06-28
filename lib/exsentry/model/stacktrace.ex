@@ -1,8 +1,8 @@
 defmodule ExSentry.Model.Stacktrace do
-  @moduledoc ~S"""
-  ExSentry.Model.Stacktrace represents an object adhering to the Sentry
-  `stacktrace` interface.
-  """
+  @moduledoc false
+
+  # ExSentry.Model.Stacktrace represents an object adhering to the Sentry
+  # `stacktrace` interface.
 
   @derive [Poison.Encoder]
 

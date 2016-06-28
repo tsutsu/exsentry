@@ -1,8 +1,8 @@
 defmodule ExSentry.Model.Request do
-  @moduledoc ~S"""
-  ExSentry.Model.Request represents an object adhering to the Sentry
-  `request` interface.
-  """
+  @moduledoc false
+
+  # ExSentry.Model.Request represents an object adhering to the Sentry
+  # `request` interface.
 
   @derive [Poison.Encoder]
 

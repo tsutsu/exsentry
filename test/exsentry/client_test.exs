@@ -1,8 +1,6 @@
 defmodule ExSentry.ClientTest do
   use ExSpec, async: false
   import Mock
-  import ExSentry.Client, only: [capture_exception: 4, capture_message: 3]
-  alias ExSentry.Client.State
   doctest ExSentry.Client
 
   defp with_mock_http(fun) do
@@ -13,7 +11,6 @@ defmodule ExSentry.ClientTest do
         assert([] != headers |> Enum.filter(fn ({k,_}) -> k == "Content-Type" end))
         body = Poison.decode!(payload)
         assert("hey" == body["message"])
-        :lol
       end
     ] do
       fun.()
@@ -26,8 +23,7 @@ defmodule ExSentry.ClientTest do
         try do
           raise "hey"
         rescue
-          e ->
-            assert(:lol == capture_exception(e, System.stacktrace, [], %State{}))
+          e -> assert(:ok == ExSentry.capture_exception(e))
         end
       end
     end
@@ -36,7 +32,7 @@ defmodule ExSentry.ClientTest do
   context "capture_message" do
     it "dispatches a well-formed request" do
       with_mock_http fn ->
-        assert(:lol == capture_message("hey", [], %State{}))
+        assert(:ok == ExSentry.capture_message("hey"))
       end
     end
   end

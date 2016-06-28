@@ -104,7 +104,7 @@ defmodule ExSentry.Client do
 
 
   @spec capture_exception(Exception.t, [tuple], [atom: any], %State{}) :: pid
-  def capture_exception(exception, trace, opts, state) do
+  defp capture_exception(exception, trace, opts, state) do
     safely_do fn ->
       opts
       |> Dict.put(:message, Exception.message(exception))
@@ -115,7 +115,7 @@ defmodule ExSentry.Client do
   end
 
   @spec capture_message(String.t, [atom: any], %State{}) :: pid
-  def capture_message(message, opts, state) do
+  defp capture_message(message, opts, state) do
     safely_do fn ->
       opts
       |> Dict.put(:message, message)

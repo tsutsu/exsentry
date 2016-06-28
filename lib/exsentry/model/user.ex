@@ -1,8 +1,8 @@
 defmodule ExSentry.Model.User do
-  @moduledoc ~S"""
-  ExSentry.Model.User represents an object adhering to the Sentry
-  `user` interface.
-  """
+  @moduledoc false
+
+  # ExSentry.Model.User represents an object adhering to the Sentry
+  # `user` interface.
 
   @derive [Poison.Encoder]
 
