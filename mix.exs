@@ -3,7 +3,7 @@ defmodule ExSentry.Mixfile do
 
   def project do
     [app: :exsentry,
-     version: "0.6.0",
+     version: "0.6.1",
      elixir: "~> 1.1",
      build_embedded: Mix.env == :prod,
      start_permanent: Mix.env == :prod,
@@ -34,7 +34,6 @@ defmodule ExSentry.Mixfile do
         :hackney,
         :poison,
         :plug,
-        :gen_retry,
       ],
       mod: {ExSentry, []}]
   end
@@ -47,7 +46,6 @@ defmodule ExSentry.Mixfile do
       {:hackney, "~> 1.6.0"},
       {:poison, "~> 1.5 or ~> 2.0"},
       {:plug, "~> 1.0"},
-      {:gen_retry, "~> 0.1.0"},
       {:ex_spec, github: "appcues/ex_spec", tag: "1.1.0-elixir13", only: :test},
       {:mock, "~> 0.1.1", only: :test},
       {:excoveralls, "~> 0.4.3", only: :test},
