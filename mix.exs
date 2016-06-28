@@ -31,23 +31,24 @@ defmodule ExSentry.Mixfile do
         :fuzzyurl,
         :uuid,
         :timex,
-        :httpotion,
+        :hackney,
         :poison,
         :plug,
+        :gen_retry,
       ],
       mod: {ExSentry, []}]
   end
 
   defp deps do
     [
-      {:fuzzyurl, "~> 0.8"},
+      {:fuzzyurl, "~> 0.9.0"},
       {:uuid, "~> 1.1"},
       {:timex, "~> 2.1"},
-      {:ibrowse, "~> 4.2.2", [hex: :ibrowse]},
-      {:httpotion, "~> 3.0"},
+      {:hackney, "~> 1.6.0"},
       {:poison, "~> 1.5 or ~> 2.0"},
       {:plug, "~> 1.0"},
-      {:ex_spec, "~> 1.0.0", only: :test},
+      {:gen_retry, "~> 0.1.0"},
+      {:ex_spec, github: "appcues/ex_spec", tag: "1.1.0-elixir13", only: :test},
       {:mock, "~> 0.1.1", only: :test},
       {:excoveralls, "~> 0.4.3", only: :test},
       {:earmark, "~> 0.1", only: :dev},

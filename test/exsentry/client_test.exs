@@ -5,18 +5,24 @@ defmodule ExSentry.ClientTest do
   alias ExSentry.Client.State
   doctest ExSentry.Client
 
-  ExSpec.describe "capture_exception" do
+  defp with_mock_http(fun) do
+    with_mock ExSentry.Sender, [
+      get_connection: fn (_) -> :pretend_this_is_a_conn_ref end,
+      send_request: fn (_conn_ref, _url, headers, payload) ->
+        assert([] != headers |> Enum.filter(fn ({k,_}) -> k == "X-Sentry-Auth" end))
+        assert([] != headers |> Enum.filter(fn ({k,_}) -> k == "Content-Type" end))
+        body = Poison.decode!(payload)
+        assert("hey" == body["message"])
+        :lol
+      end
+    ] do
+      fun.()
+    end
+  end
+
+  context "capture_exception" do
     it "dispatches a well-formed request" do
-      with_mock ExSentry.Sender, [
-        init: fn (_) -> {:ok, :whatever} end,
-        send_request: fn (_pid, _url, headers, payload) ->
-          assert([] != headers |> Enum.filter(fn ({k,_}) -> k == "X-Sentry-Auth" end))
-          assert([] != headers |> Enum.filter(fn ({k,_}) -> k == "Content-Type" end))
-          assert("hey" == payload.message)
-          assert(%ExSentry.Model.Stacktrace{} = payload.stacktrace)
-          :lol
-        end
-      ] do
+      with_mock_http fn ->
         try do
           raise "hey"
         rescue
@@ -27,17 +33,9 @@ defmodule ExSentry.ClientTest do
     end
   end
 
-  ExSpec.describe "capture_message" do
+  context "capture_message" do
     it "dispatches a well-formed request" do
-      with_mock ExSentry.Sender, [
-        init: fn (_) -> {:ok, :whatever} end,
-        send_request: fn (_pid, _url, headers, payload) ->
-          assert([] != headers |> Enum.filter(fn ({k,_}) -> k == "X-Sentry-Auth" end))
-          assert([] != headers |> Enum.filter(fn ({k,_}) -> k == "Content-Type" end))
-          assert("hey" == payload.message)
-          :lol
-        end
-      ] do
+      with_mock_http fn ->
         assert(:lol == capture_message("hey", [], %State{}))
       end
     end

@@ -24,14 +24,14 @@ defmodule ExSentry.Model.StacktraceTest do
     %{filename: "src/elixir.erl", function: "eval_forms/4", module: :elixir},
   ]}
 
-  ExSpec.describe "from_stacktrace" do
+  context "from_stacktrace" do
     it "formats stacktrace correctly" do
       fst = ExSentry.Model.Stacktrace.from_stacktrace(@stacktrace)
       assert(@fst == fst)
     end
   end
 
-  ExSpec.describe "serialization" do
+  context "serialization" do
     it "serializes to JSON" do
       fst = ExSentry.Model.Stacktrace.from_stacktrace(@stacktrace)
       assert({:ok, _} = fst |> Poison.encode)
