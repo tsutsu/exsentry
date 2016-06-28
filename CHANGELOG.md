@@ -1,3 +1,9 @@
+0.6.2
+
+* Refactored to send all requests directly from ExSentry.Client, rather
+  than spawning a process for each request.
+
+
 0.5.1
 
 * Added Elixir 1.3 compatibility.
