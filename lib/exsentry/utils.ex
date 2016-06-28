@@ -1,19 +1,28 @@
 defmodule ExSentry.Utils do
-  @moduledoc ~S"""
-  Various utility functions that don't fit anywhere else.
-  Not intended for end users.
+  require Logger
+
+  @moduledoc false
+
+  @doc ~S"""
+  Attempts to execute `fun`. If an exception is raised, it is caught and
+  printed to the error log.
   """
+  def safely_do(fun) do
+    try do
+      fun.()
+    rescue
+      e ->
+        Exception.format(:error, e) |> Logger.error
+        {:error, e}
+    end
+  end
 
   @doc ~S"""
   Returns the string-formatted version of the given app.
   """
   @spec version(atom) :: String.t
   def version(app \\ :exsentry) do
-    Application.loaded_applications
-    |> Enum.filter(&(elem(&1, 0) == app))
-    |> List.first
-    |> elem(2)
-    |> to_string
+    versions[app]
   end
 
   @doc ~S"""
@@ -21,10 +30,9 @@ defmodule ExSentry.Utils do
   """
   @spec versions :: map
   def versions do
-    Application.loaded_applications
-    |> Enum.reduce(%{}, fn ({app, _desc, ver}, acc) ->
-         Map.put(acc, app, to_string(ver))
-       end)
+    Enum.reduce Application.loaded_applications, %{}, fn ({app, _desc, ver}, acc) ->
+      Map.put(acc, app, to_string(ver))
+    end
   end
 
   @doc ~S"""

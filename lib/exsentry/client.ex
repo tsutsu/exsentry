@@ -1,5 +1,6 @@
 defmodule ExSentry.Client do
   require Logger
+  import ExSentry.Utils, only: [safely_do: 1]
 
   @moduledoc false
 
@@ -138,21 +139,12 @@ defmodule ExSentry.Client do
       ExSentry.Sender.send_request(state.hackney_connection, state.url, headers, body)
     end
   end
-
-  ## Under no circumstances is ExSentry itself allowed to crash.
-  defp safely_do(func) do
-    try do
-      func.()
-    rescue
-      e ->
-        Exception.format(:error, e) |> Logger.error
-        {:error, e}
-    end
-  end
 end
 
 ## These functions are in their own module for mockability
 defmodule ExSentry.Sender do
+  import ExSentry.Utils, only: [safely_do: 1]
+
   @moduledoc false
 
   def get_connection(fuzzyurl) do
@@ -166,9 +158,11 @@ defmodule ExSentry.Sender do
   end
 
   def send_request(conn_ref, url, headers, body) do
-    fu = Fuzzyurl.from_string(url)
-    {:ok, _status, _resp_headers, _conn_ref} =
-      :hackney.send_request(conn_ref, {:post, fu.path, headers, body})
-    {:ok, _} = :hackney.body(conn_ref)
+    safely_do fn ->
+      fu = Fuzzyurl.from_string(url)
+      {:ok, _status, _resp_headers, _conn_ref} =
+        :hackney.send_request(conn_ref, {:post, fu.path, headers, body})
+      {:ok, _} = :hackney.body(conn_ref)
+    end
   end
 end
