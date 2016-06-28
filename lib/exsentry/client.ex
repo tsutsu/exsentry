@@ -1,16 +1,16 @@
 defmodule ExSentry.Client do
   require Logger
+  import ExSentry.Utils, only: [safely_do: 1]
 
-  @moduledoc ~S"""
-  A GenServer which handles the capture of message/exception information
-  to Sentry.  Not intended for end users' direct usage; use `ExSentry`
-  as the primary interface instead.
+  @moduledoc false
 
-  For each outgoing request, an ExSentry.Sender process is spawned to handle
-  the HTTP transport, including retry and error handling.
-  """
+  # A GenServer which handles the capture of message/exception information
+  # and its submission to Sentry.  Not intended for end users' direct usage;
+  # use `ExSentry` as the primary interface instead.
 
   defmodule State do
+    @moduledoc false
+
     defstruct dsn: nil,
               url: nil,
               key: nil,
@@ -18,7 +18,8 @@ defmodule ExSentry.Client do
               opts: nil,
               project_id: nil,
               version: nil,
-              status: nil
+              status: nil,
+              hackney_connection: nil
   end
 
   use GenServer
@@ -73,7 +74,8 @@ defmodule ExSentry.Client do
           url: post_fu |> Fuzzyurl.to_string,
           project_id: project_id,
           version: ExSentry.Utils.version,
-          status: :ready
+          status: :ready,
+          hackney_connection: ExSentry.Sender.get_connection(fu)
         }}
     end
   end
@@ -102,7 +104,7 @@ defmodule ExSentry.Client do
 
 
   @spec capture_exception(Exception.t, [tuple], [atom: any], %State{}) :: pid
-  def capture_exception(exception, trace, opts, state) do
+  defp capture_exception(exception, trace, opts, state) do
     safely_do fn ->
       opts
       |> Dict.put(:message, Exception.message(exception))
@@ -113,7 +115,7 @@ defmodule ExSentry.Client do
   end
 
   @spec capture_message(String.t, [atom: any], %State{}) :: pid
-  def capture_message(message, opts, state) do
+  defp capture_message(message, opts, state) do
     safely_do fn ->
       opts
       |> Dict.put(:message, message)
@@ -125,29 +127,42 @@ defmodule ExSentry.Client do
   @spec send_payload(map, %State{}) :: pid
   defp send_payload(payload, state) do
     safely_do fn ->
-      stripped_payload = payload
-                         |> Map.from_struct
-                         |> ExSentry.Utils.strip_nils_from_map
+      body = payload
+             |> Map.from_struct
+             |> ExSentry.Utils.strip_nils_from_map
+             |> Poison.encode!
       headers = [
         {"X-Sentry-Auth", ExSentry.Model.Payload.get_auth_header_value(state)},
         {"Content-Type", "application/json"}
       ]
-      sender_opts = Application.get_env(:exsentry, :sender_opts) || %{}
-      {:ok, pid} = GenServer.start_link(ExSentry.Sender, sender_opts)
-      ExSentry.Sender.send_request(pid, state.url, headers, stripped_payload)
+
+      ExSentry.Sender.send_request(state.hackney_connection, state.url, headers, body)
     end
   end
-
-  ## Under no circumstances is ExSentry itself allowed to crash.
-  defp safely_do(func) do
-    try do
-      func.()
-    rescue
-      e ->
-        Exception.format(:error, e) |> Logger.error
-        {:error, e}
-    end
-  end
-
 end
 
+## These functions are in their own module for mockability
+defmodule ExSentry.Sender do
+  import ExSentry.Utils, only: [safely_do: 1]
+
+  @moduledoc false
+
+  def get_connection(fuzzyurl) do
+    {transport, port} = if fuzzyurl.protocol == "http" do
+      {:hackney_tcp_transport, fuzzyurl.port || 80}
+    else
+      {:hackney_ssl_transport, fuzzyurl.port || 443}
+    end
+    {:ok, conn_ref} = :hackney.connect(transport, fuzzyurl.hostname, port, [keepalive: true])
+    conn_ref
+  end
+
+  def send_request(conn_ref, url, headers, body) do
+    safely_do fn ->
+      fu = Fuzzyurl.from_string(url)
+      {:ok, _status, _resp_headers, _conn_ref} =
+        :hackney.send_request(conn_ref, {:post, fu.path, headers, body})
+      {:ok, _} = :hackney.body(conn_ref)
+    end
+  end
+end

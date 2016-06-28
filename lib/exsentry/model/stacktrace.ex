@@ -1,8 +1,8 @@
 defmodule ExSentry.Model.Stacktrace do
-  @moduledoc ~S"""
-  ExSentry.Model.Stacktrace represents an object adhering to the Sentry
-  `stacktrace` interface.
-  """
+  @moduledoc false
+
+  # ExSentry.Model.Stacktrace represents an object adhering to the Sentry
+  # `stacktrace` interface.
 
   @derive [Poison.Encoder]
 
@@ -13,6 +13,7 @@ defmodule ExSentry.Model.Stacktrace do
   stacktrace (as returned by `System.stacktrace/0`).
   """
   @spec from_stacktrace([tuple]) :: %ExSentry.Model.Stacktrace{}
+  def from_stacktrace(%ExSentry.Model.Stacktrace{}=trace), do: trace
   def from_stacktrace(stacktrace) do
     frames = stacktrace |> Enum.map(&format_stacktrace_entry(&1))
     %ExSentry.Model.Stacktrace{frames: frames}

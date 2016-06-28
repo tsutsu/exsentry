@@ -1,8 +1,8 @@
 defmodule ExSentry.Model.Payload do
-  @moduledoc ~S"""
-  ExSentry.Model.Payload represents the entire request body of an
-  HTTP POST request to Sentry.
-  """
+  @moduledoc false
+
+  # ExSentry.Model.Payload represents the entire request body of an
+  # HTTP POST request to Sentry.
 
   @derive [Poison.Encoder]
 

@@ -17,13 +17,13 @@ defmodule ExSentry.Model.RequestTest do
     }
   }
 
-  ExSpec.describe "from_conn" do
+  context "from_conn" do
     it "makes a valid ExSentry.Model.Request from conn" do
       assert(@request == from_conn(FakeConn.conn))
     end
   end
 
-  ExSpec.describe "serialization" do
+  context "serialization" do
     it "serializes to JSON" do
       assert({:ok, _} = from_conn(FakeConn.conn) |> Poison.encode)
     end

@@ -9,7 +9,7 @@ defmodule ExSentry.Model.UserTest do
     ip_address: "127.0.0.1"
   }
 
-  ExSpec.describe "serialization" do
+  context "serialization" do
     it "serializes to JSON" do
       assert({:ok, _} = @user |> Poison.encode)
     end

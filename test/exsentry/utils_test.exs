@@ -2,13 +2,13 @@ defmodule ExSentry.UtilsTest do
   use ExSpec, async: true
   doctest ExSentry.Utils
 
-  ExSpec.describe "version" do
+  context "version" do
     it "returns the correct version string" do
       assert(Regex.match?(~r"^\d+\.\d+(?:\.\d+)?", ExSentry.Utils.version))
     end
   end
 
-  ExSpec.describe "versions" do
+  context "versions" do
     it "returns correct version strings" do
       ExSentry.Utils.versions
       |> Enum.map(fn ({_k, v}) ->
