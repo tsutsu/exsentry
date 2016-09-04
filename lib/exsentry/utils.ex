@@ -92,5 +92,25 @@ defmodule ExSentry.Utils do
       if is_nil(v), do: acc, else: Map.put(acc, k, v)
     end
   end
+
+  @doc ~S"""
+  Given input from e.g. `:calendar.universal_time()`, returns
+  an ISO 8601 date string like `2016-09-03T14:25:22Z`.
+  """
+  def format_datetime({{y, mon, d}, {h, min, s}}) do
+    :io_lib.format(
+      "~.4.0w-~.2.0w-~.2.0wT~.2.0w:~.2.0w:~.2.0wZ",
+      [y, mon, d, h, min, s]
+    )
+    |> :erlang.iolist_to_binary
+  end
+
+  @doc ~S"""
+  Returns an ISO 8601 date string like `2016-09-03T14:25:22Z`, representing
+  the current datetime.
+  """
+  def datetime_now do
+    :calendar.universal_time() |> format_datetime
+  end
 end
 

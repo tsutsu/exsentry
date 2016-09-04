@@ -39,7 +39,7 @@ defmodule ExSentry.Model.Payload do
   @spec from_opts([atom: any]) :: map
   def from_opts(opts \\ []) do
     versions = ExSentry.Utils.versions
-    now = Timex.DateTime.now |> Timex.format!("{YYYY}-{0M}-{0D}T{0h24}:{0m}:{0s}")
+    now = ExSentry.Utils.datetime_now
 
     ## attributes
     event_id = opts[:event_id] || UUID.uuid4() |> String.replace("-", "")

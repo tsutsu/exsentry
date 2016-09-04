@@ -21,5 +21,12 @@ defmodule ExSentry.UtilsTest do
              Enum.count(Map.to_list(ExSentry.Utils.versions)))
     end
   end
+
+  context "datetime_now" do
+    it "returns an ISO 8601 datetime string" do
+      dt_str = ExSentry.Utils.datetime_now
+      assert(String.match?(dt_str, ~r/\d\d\d\d-\d\d-\d\dT\d\d:\d\d:\d\dZ/))
+    end
+  end
 end
 
