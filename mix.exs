@@ -44,9 +44,11 @@ defmodule ExSentry.Mixfile do
       {:hackney, "~> 1.4"},
       {:poison, "~> 1.5 or ~> 2.0"},
       {:plug, "~> 1.0"},
-      {:ex_spec, github: "appcues/ex_spec", tag: "1.1.0-elixir13", only: :test},
+
+      {:ex_spec, "~> 2.0", only: :test},
       {:mock, "~> 0.1.1", only: :test},
       {:excoveralls, "~> 0.4.3", only: :test},
+
       {:earmark, "~> 0.1", only: :dev},
       {:ex_doc, "~> 0.11", only: :dev},
     ]
