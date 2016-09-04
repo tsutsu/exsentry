@@ -18,6 +18,18 @@ Offered without guarantee, YMMV, etc.
 Hexdocs.pm.](http://hexdocs.pm/exsentry/ExSentry.html)
 
 
+## Contributors
+
+The following people have graciously contributed improvements to this code.
+Many thanks!
+
+* Igor Šarčević ([@shiroyasha](https://github.com/shiroyasha))
+* Zach Denton ([@zacharydenton](https://github.com/zacharydenton))
+* Gerry Shaw ([@gshaw](https://github.com/gshaw))
+* Curtis Schiewek ([@cschiewek](https://github.com/cschiewek))
+* Roman Heinrich ([@mindreframer](https://github.com/mindreframer))
+
+
 ## Authorship and License
 
 ExSentry is copyright 2015-2016 Appcues, Inc.

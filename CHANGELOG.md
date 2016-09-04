@@ -1,3 +1,14 @@
+0.6.3
+
+* Removed Timex dependency.
+  Thanks [@mindreframer](https://github.com/mindreframer)!
+
+* Fixed handling of port numbers in DSN URL.
+  Thanks [@mindreframer](https://github.com/mindreframer)!
+
+* Updated dev dependency ExSpec to 2.0.
+
+
 0.6.2
 
 * Refactored to send all requests directly from ExSentry.Client, rather
