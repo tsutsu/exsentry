@@ -149,9 +149,9 @@ defmodule ExSentry.Sender do
 
   def get_connection(fuzzyurl) do
     {transport, port} = if fuzzyurl.protocol == "http" do
-      {:hackney_tcp_transport, fuzzyurl.port || 80}
+      {:hackney_tcp_transport, as_int(fuzzyurl.port || 80)}
     else
-      {:hackney_ssl_transport, fuzzyurl.port || 443}
+      {:hackney_ssl_transport, as_int(fuzzyurl.port || 443)}
     end
     {:ok, conn_ref} = :hackney.connect(transport, fuzzyurl.hostname, port, [keepalive: true])
     conn_ref
@@ -165,4 +165,7 @@ defmodule ExSentry.Sender do
       {:ok, _} = :hackney.body(conn_ref)
     end
   end
+
+  defp as_int(x) when is_integer(x), do: x
+  defp as_int(x) when is_binary(x), do: String.to_integer(x)
 end
