@@ -4,9 +4,8 @@ defmodule ExSentry.ClientTest do
   doctest ExSentry.Client
 
   defp with_mock_http(fun) do
-    with_mock ExSentry.Sender, [
-      get_connection: fn (_) -> :pretend_this_is_a_conn_ref end,
-      send_request: fn (_conn_ref, _url, headers, payload) ->
+    with_mock :hackney, [
+      request: fn (_method, _url, headers, payload) ->
         assert([] != headers |> Enum.filter(fn ({k,_}) -> k == "X-Sentry-Auth" end))
         assert([] != headers |> Enum.filter(fn ({k,_}) -> k == "Content-Type" end))
         body = Poison.decode!(payload)

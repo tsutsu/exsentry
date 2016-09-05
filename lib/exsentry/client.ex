@@ -8,6 +8,7 @@ defmodule ExSentry.Client do
   # and its submission to Sentry.  Not intended for end users' direct usage;
   # use `ExSentry` as the primary interface instead.
 
+  ## TODO 1.0 make this a regular map rather than a struct
   defmodule State do
     @moduledoc false
 
@@ -19,7 +20,7 @@ defmodule ExSentry.Client do
               project_id: nil,
               version: nil,
               status: nil,
-              hackney_connection: nil
+              hackney_connection: nil  ## TODO deprecated, remove in 1.0
   end
 
   use GenServer
@@ -75,7 +76,7 @@ defmodule ExSentry.Client do
           project_id: project_id,
           version: ExSentry.Utils.version,
           status: :ready,
-          hackney_connection: ExSentry.Sender.get_connection(fu)
+          hackney_connection: nil, ## TODO deprecated, remove in 1.0
         }}
     end
   end
@@ -136,36 +137,9 @@ defmodule ExSentry.Client do
         {"Content-Type", "application/json"}
       ]
 
-      ExSentry.Sender.send_request(state.hackney_connection, state.url, headers, body)
+      :hackney.request(:post, state.url, headers, body)
     end
   end
 end
 
-## These functions are in their own module for mockability
-defmodule ExSentry.Sender do
-  import ExSentry.Utils, only: [safely_do: 1]
 
-  @moduledoc false
-
-  def get_connection(fuzzyurl) do
-    {transport, port} = if fuzzyurl.protocol == "http" do
-      {:hackney_tcp_transport, as_int(fuzzyurl.port || 80)}
-    else
-      {:hackney_ssl_transport, as_int(fuzzyurl.port || 443)}
-    end
-    {:ok, conn_ref} = :hackney.connect(transport, fuzzyurl.hostname, port, [keepalive: true])
-    conn_ref
-  end
-
-  def send_request(conn_ref, url, headers, body) do
-    safely_do fn ->
-      fu = Fuzzyurl.from_string(url)
-      {:ok, _status, _resp_headers, _conn_ref} =
-        :hackney.send_request(conn_ref, {:post, fu.path, headers, body})
-      {:ok, _} = :hackney.body(conn_ref)
-    end
-  end
-
-  defp as_int(x) when is_integer(x), do: x
-  defp as_int(x) when is_binary(x), do: String.to_integer(x)
-end

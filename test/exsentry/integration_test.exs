@@ -3,11 +3,12 @@ defmodule ExSentry.IntegrationTest do
   import Mock
 
   defp with_mock_http(fun) do
-    with_mock ExSentry.Sender, [
-      get_connection: fn (_) -> :pretend_this_is_a_conn_ref end,
-      send_request: fn (_,_,_,_) -> :ok end
+    with_mock :hackney, [
+      request: fn (_method, _url, _headers, _payload) -> :ok end
     ] do
       fun.()
+      Process.sleep(300)
+      assert called :hackney.request(:_, :_, :_, :_)
     end
   end
 
@@ -16,8 +17,6 @@ defmodule ExSentry.IntegrationTest do
       with_mock_http fn ->
         client = ExSentry.new("http://user:pass@example.com/1")
         assert(:ok == client |> ExSentry.capture_message("whoa"))
-        :timer.sleep(300)
-        assert called ExSentry.Sender.send_request(:_, :_, :_, :_)
       end
     end
 
@@ -29,9 +28,8 @@ defmodule ExSentry.IntegrationTest do
         rescue
           _ -> :ok
         end
-        :timer.sleep(300)
-        assert called ExSentry.Sender.send_request(:_, :_, :_, :_)
       end
     end
   end
 end
+
