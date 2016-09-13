@@ -1,3 +1,8 @@
+0.7.0
+
+Simplified outgoing HTTP code by removing keepalive.
+
+
 0.6.3
 
 * Removed Timex dependency.
