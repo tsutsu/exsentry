@@ -20,7 +20,9 @@ defmodule ExSentry do
   3. Configure the default ExSentry client by specifying your Sentry DSN
      in `config.exs`:
 
-          config :exsentry, dsn: "your-dsn-here"
+          config :exsentry,
+            otp_app: :my_app,
+            dsn: "your-dsn-here"
 
      To turn ExSentry off for a particular `MIX_ENV`, set the Sentry
      DSN to the empty string `""` in the appropriate config file.
@@ -31,7 +33,7 @@ defmodule ExSentry do
   Use `ExSentry.LoggerBackend` to send all `:error`-level log messages
   to Sentry:
 
-      defmodule Myapp do
+      defmodule MyApp do
         use Application
 
         def start(_type, _args) do
@@ -45,8 +47,8 @@ defmodule ExSentry do
   Use `ExSentry.Plug` to capture all exceptions in a Plug pipeline:
 
       # Phoenix example
-      defmodule Myapp.Router do
-        use Myapp.Web, :router
+      defmodule MyApp.Router do
+        use MyApp.Web, :router
         use ExSentry.Plug
 
         pipeline :browser do
@@ -54,7 +56,7 @@ defmodule ExSentry do
 
 
       # pure Plug example
-      defmodule Myapp.Router do
+      defmodule MyApp.Router do
         use Plug.Router
         use ExSentry.Plug
 

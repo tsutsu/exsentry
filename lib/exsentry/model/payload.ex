@@ -39,6 +39,10 @@ defmodule ExSentry.Model.Payload do
   @spec from_opts([atom: any]) :: map
   def from_opts(opts \\ []) do
     versions = ExSentry.Utils.versions
+    version = case Application.get_env(:exsentry, :otp_app) do
+      nil -> "0.0.0"
+      app -> ExSentry.Utils.version(app)
+    end
     now = ExSentry.Utils.datetime_now
 
     ## attributes
@@ -65,7 +69,7 @@ defmodule ExSentry.Model.Payload do
 
     %ExSentry.Model.Payload{
       platform: "other", ## no official love for Elixir yet
-      release: versions[:exsentry],
+      release: version,
       modules: versions,
 
       event_id: event_id,

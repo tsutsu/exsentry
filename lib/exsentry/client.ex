@@ -66,6 +66,10 @@ defmodule ExSentry.Client do
           port: fu.port,
           path: "/api/#{project_id}/store/"
         }
+        version = case Application.get_env(:exsentry, :otp_app) do
+          nil -> "0.0.0"
+          app -> ExSentry.Utils.version(app) || "0.0.0"
+        end
 
         {:ok, %State{
           dsn: dsn,
