@@ -7,7 +7,7 @@ defmodule ExSentry.IntegrationTest do
       request: fn (_method, _url, _headers, _payload) -> :ok end
     ] do
       fun.()
-      Process.sleep(300)
+      :timer.sleep(300)
       assert called :hackney.request(:_, :_, :_, :_)
     end
   end
