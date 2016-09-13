@@ -6,8 +6,6 @@ defmodule ExSentry.Model.Payload do
 
   @derive [Poison.Encoder]
 
-  @otp_app Application.get_env(:exsentry, :otp_app)
-
   defstruct platform: "other",
             release: nil,
             modules: nil,
@@ -41,7 +39,7 @@ defmodule ExSentry.Model.Payload do
   @spec from_opts([atom: any]) :: map
   def from_opts(opts \\ []) do
     versions = ExSentry.Utils.versions
-    version = case @otp_app do
+    version = case Application.get_env(:exsentry, :otp_app) do
       nil -> "0.0.0"
       app -> ExSentry.Utils.version(app)
     end
