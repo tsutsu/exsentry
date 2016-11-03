@@ -41,16 +41,16 @@ defmodule ExSentry.Mixfile do
     [
       {:fuzzyurl, "~> 0.9 or ~> 1.0"},
       {:uuid, "~> 1.1"},
-      {:hackney, "~> 1.4"},
-      {:poison, "~> 1.5 or ~> 2.0"},
-      {:plug, "~> 1.0"},
+      {:hackney, "~> 1.6"},
+      {:poison, "~> 1.5 or ~> 2.0 or ~> 3.0"},
+      {:plug, "~> 1.2"},
 
       {:ex_spec, "~> 2.0", only: :test},
-      {:mock, "~> 0.1.1", only: :test},
-      {:excoveralls, "~> 0.4.3", only: :test},
+      {:mock, "~> 0.2.0", only: :test},
+      {:excoveralls, "~> 0.5.7", only: :test},
 
-      {:earmark, "~> 0.1", only: :dev},
-      {:ex_doc, "~> 0.11", only: :dev},
+      {:earmark, "~> 1.0", only: :dev},
+      {:ex_doc, "~> 0.14.3", only: :dev},
     ]
   end
 end
